@@ -1,3 +1,10 @@
 # RESTful Api 
 
-RESTful Api made with Slim Framework v3
+Library based on Slim Framework V3 to make RESTful APIs
+
+# NOTE
+This library should be used inside a project generated with generator-slim-3-api:
+
+https://github.com/machacaHeavy/generator-slim-3-api
+
+This lib is already a dependency of the generated project.
