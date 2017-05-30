@@ -11,8 +11,6 @@ class Application
 
 	private $ROUTES_PATH;
 
-	private $LIBS_PATH;
-
 	private $config;
 
 	private $services;
@@ -24,17 +22,15 @@ class Application
 	private $app;
 
 
-	public function __construct()
+	public function __construct($appFolder)
 	{
 		try
 		{
 			define('ROOT_PATH', dirname(dirname(dirname(dirname(__DIR__)))));
 
-			$this->APP_PATH  	= ROOT_PATH	. DIRECTORY_SEPARATOR . 'app';
+			$this->APP_PATH  	= ROOT_PATH	. DIRECTORY_SEPARATOR . $appFolder;
 
 			$this->ROUTES_PATH 	= $this->APP_PATH 	. DIRECTORY_SEPARATOR . 'routes';
-
-			$this->LIBS_PATH 	= $this->APP_PATH 	. DIRECTORY_SEPARATOR . 'libs';
 
 			$this->registerConfig();
 
