@@ -1,19 +1,18 @@
 {
-    "name": "gs/slim-api",
-    "description": "RESTful Api With Slim 3",
+    "name": "machacaHeavy/slim-api",
+    "description": "RESTful Api library with Slim 3",
     "type": "library",
     "license": "propietary",
     "authors": [
         {
-            "name": "Jose Gildardo Solis Sanchez",
+            "name": "José Gildardo Solis Sánchez",
             "email": "gildardo.gs5@gmail.com"
         }
     ],
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.5.0",
-        "slim/slim": "3.*",
-        "firebase/php-jwt": "^4.0"
+        "slim/slim": "3.*"
     },
     "autoload" : {
         "psr-4" : {
