@@ -31,21 +31,10 @@ class JSONResponse extends Response
             throw new \Exception('La respuesta siempre debe ser un arreglo');
         }
 
-        /*
-        $key = array_keys($data)[0];
-
-        if ( isset($data[$key]['code']) ){ $this->status = $data[$key]['code']; }
-
-        if ( $this->status != 200 )
-        {
-            $count = 1;
+        if ( isset($data['error']['code']) )
+        { 
+            $this->status = $data['error']['code']; 
         }
-        else
-        {
-            $count = ( count($data[$key]) > 1)? count($data[$key]) : 1;
-        }
-        */
-        if ( isset($data['error']['code']) ){ $this->status = $data['error']['code']; }
 
         $count = 1;
 

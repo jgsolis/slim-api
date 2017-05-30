@@ -2,6 +2,7 @@
     "name": "machacaHeavy/slim-api",
     "description": "RESTful Api library with Slim 3",
     "type": "library",
+    "version" : "1.0.0",
     "license": "propietary",
     "authors": [
         {
@@ -12,7 +13,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.5.0",
-        "slim/slim": "3.*"
+        "slim/slim": "3.*",
+        "katzgrau/klogger": "^1.2"
     },
     "autoload" : {
         "psr-4" : {

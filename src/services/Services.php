@@ -4,22 +4,35 @@ return [
 	
 	'logger' => function($c){
 
-		if ( !isset($c) ){ throw new \Exception('No existe el contenedor de dependencias'); }
+		if ( !isset($c) )
+		{ 
+			throw new \Exception('No existe el contenedor de dependencias'); 
+		}
 
 		$classLogger   = '\\Katzgrau\\KLogger\\Logger';
 		$classLogLevel = '\\Psr\\Log\\LogLevel';
 
-		if ( !class_exists($classLogger) ) { throw new \Exception("La clase  {$classLogger}  no existe"); }
+		if ( !class_exists($classLogger) ) 
+		{ 
+			throw new \Exception("La clase  {$classLogger}  no existe"); 
+		}
 
-		if ( !class_exists($classLogLevel) ){ throw new \Exception("La clase {$classLogLevel} no existe"); }
+		if ( !class_exists($classLogLevel) )
+		{ 
+			throw new \Exception("La clase {$classLogLevel} no existe"); 
+		}
 
-		if ( empty($c->get('settings')['logger']) || empty($c->get('settings')['logger']['extension']) || empty($c->get('settings')['logger']['prefix']) || empty($c->get('settings')['logger']['path']) )
+		if ( empty($c->get('settings')['logger']) )
 		{ 
 			throw new \Exception("No se encuentra la configuración del logger"); 
 		}
-		$path 		= (trim($config['path']) != '')? $config['path'] : 'logs/';
-		$extension 	= (trim($config['extension']) != '')? $config['extension'] : 'log';
-		$prefix 	= (trim($config['prefix']) != '')? $config['prefix'] : 'app_';
+
+		$extension  = ( $c->get('settings')['logger']['extension'] == NULL || trim($c->get('settings')['logger']['extension']) === '' )? 'log' : $c->get('settings')['logger']['extension'];
+
+		$path		= ( $c->get('settings')['logger']['path'] == NULL || trim($c->get('settings')['logger']['path']) === '' )? 'logs/' : $c->get('settings')['logger']['path'];
+
+		$prefix 	= ( $c->get('settings')['logger']['prefix'] == NULL || trim($c->get('settings')['logger']['prefix']) === '' )? 'app_' : $c->get('settings')['logger']['prefix'];
+
 		$config     = $c->get('settings')['logger'];
 
 		$logger 	= new $classLogger( $path, $classLogLevel::ERROR, array (
@@ -31,24 +44,16 @@ return [
 
 	},
 
-	'jwt' => function($c){
+	'response' => function($c){
 
-		$class = '\\Firebase\\JWT\\JWT';
+		$class = '\\SlimApi\\Responses\\JSONResponse';
 
 		if ( !class_exists($class) )
 		{
-	    	throw new \Exception("La clase {$class} no existe");
+			throw new \Exception("La clase {$class} no existe");
 		}
 
-		$jwt = new $class;
-	    return $jwt;
-
-
-	},
-
-	'response' => function($c){
-
-		$response = new \SlimApi\Responses\JSONResponse();
+		$response = new $class();
 
 		return $response;
 
@@ -65,14 +70,17 @@ return [
 
 		if ( !class_exists($classLogLevel) ){ throw new \Exception("La clase {$classLogLevel} no existe"); }
 
-		if ( empty($c->get('settings')['debugLogger']) || empty($c->get('settings')['debugLogger']['extension']) || empty($c->get('settings')['debugLogger']['prefix']) || empty($c->get('settings')['debugLogger']['path']) )
+		if ( empty($c->get('settings')['debugLogger']) )
 		{ 
 			throw new \Exception("No se encuentra la configuración del debugLogger"); 
 		}
 
-		$path 		= (trim($config['path']) != '')? $config['path'] : 'logs/debug/';
-		$extension 	= (trim($config['extension']) != '')? $config['extension'] : 'log';
-		$prefix 	= (trim($config['prefix']) != '')? $config['prefix'] : 'debug_';
+		$extension  = ( $c->get('settings')['debugLogger']['extension'] == NULL || trim($c->get('settings')['debugLogger']['extension']) === '' )? 'log' : $c->get('settings')['debugLogger']['extension'];
+
+		$path		= ( $c->get('settings')['debugLogger']['path'] == NULL || trim($c->get('settings')['debugLogger']['path']) === '' )? 'logs/debug/': $c->get('settings')['debugLogger']['path'];
+
+		$prefix 	= ( $c->get('settings')['debugLogger']['prefix'] == NULL || trim($c->get('settings')['debugLogger']['prefix']) === '' )? 'debug_' : $c->get('settings')['debugLogger']['prefix'];
+
 		$config     = $c->get('settings')['debugLogger'];
 
 		$logger 	= new $classLogger( $path, $classLogLevel::INFO, array (
