@@ -270,7 +270,7 @@ class Application
 			throw new \Exception('Error al obtener la configuración del archivo config.php');
 		}
 
-		if ( !isset($this->app->getContainer()->get('settings')['databases']) )
+		if ( $this->app->getContainer()->get('settings')['databases'] == NULL )
 		{
 			throw new \Exception('Error al obtener la configuración de la bases de datos');
 		}
@@ -280,7 +280,7 @@ class Application
 
 		foreach ( $dbs as $db )
 		{
-			if ( empty($db['database']) || empty($db['driver']) || empty($db['host']) || empty($db['username']) || empty($db['password']) )
+			if ( empty($db['database']) || empty($db['driver']) || empty($db['host']) || empty($db['username']) )
 			{
 				throw new \Exception('Error al obtener la configuración de la base de datos');
 			}
