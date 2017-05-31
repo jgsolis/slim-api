@@ -69,8 +69,15 @@ class Application
 		{
 			throw new \Exception('No se encuentra el archivo de configuración config.php');
 		}
+
+		$config = require_once $file;
+
+		if ( !array_key_exists('settings', $config) || !is_array($config['settings']) )
+		{ 
+			throw new \Exception('El archivo de configuración [config.php] no está bien formado'); 
+		}
 		
-		$this->config = require_once $file;
+		$this->config = $config;
 	}
 
 	/*-------------------------------------------------*/
@@ -78,16 +85,15 @@ class Application
 	/*-------------------------------------------------*/
 	private function setDisplayPhpErrors()
 	{
-		if ( !isset($this->config) || empty($this->config['settings']) )
-		{
-			throw new \Exception('Se necesita el archivo de configuración config.php');
-		}
-
-		if ( !isset($this->config['settings']['displayPhpErrors']) || trim($this->config['settings']['displayPhpErrors']) === '' )
+		if ( !array_key_exists( 'displayPhpErrors', $this->config['settings']) || empty($this->config['settings']['displayPhpErrors']) )
 		{
 			throw new \Exception('Necesita configurar la opción displayPhpErrors en el archivo config.php');
 		}
 
+		if ( !is_bool($this->config['settings']['displayPhpErrors']) )
+		{
+			throw new \Exception('La opción [displayPhpErrors] de [config.php] debe ser un boleano');
+		}
 		if ( $this->config['settings']['displayPhpErrors'] )
 		{
 			ini_set('display_startup_errors', 1);
@@ -107,11 +113,6 @@ class Application
 	/*-------------------------------------------------*/	
 	private function registerContainer()
 	{
-		if ( !isset($this->config) )
-		{
-			throw new \Exception('Verifique que exista el archivo config.php');
-		}
-
 		$class = '\\Slim\\Container';
 
 		if ( !class_exists($class) )
@@ -260,23 +261,21 @@ class Application
 			throw new \Exception('No se ha creado una instancia de Slim App');
 		}
 
-		if ( $this->app->getContainer() == NULL )
+
+		$c      = $this->app->getContainer();
+		$config = $c->get('settings');
+
+		if ( empty($config['databases']) )
 		{
-			throw new \Exception('No se ha creado el contenedor de dependencias');
+			throw new \Exception('No se pudo obtener la configuración de la bases de datos [databases] de [config.php]');
 		}
 
-		if ( $this->app->getContainer()->get('settings') == NULL )
-		{
-			throw new \Exception('Error al obtener la configuración del archivo config.php');
-		}
+		$dbs = $config['databases'];
 
-		if ( $this->app->getContainer()->get('settings')['databases'] == NULL )
+		if ( !is_array($dbs) )
 		{
-			throw new \Exception('Error al obtener la configuración de la bases de datos');
+			throw new \Exception('La configuración de bases de datos [databases] debe ser un arreglo');
 		}
-
-		$c 		= $this->app->getContainer();
-		$dbs 	= $c->get('settings')['databases'];
 
 		foreach ( $dbs as $db )
 		{
@@ -313,6 +312,8 @@ class Application
 				'codeMessage' => 'Internal Server Error',
 				'userMessage' => 'Servicio no disponible, intente de nuevo',
 				'devMessage'  => $e->getMessage(),
+				'line'		  => $e->getLine(),
+				'file'  	  => $e->getFile(),
 				'resource' 	  => NULL,
 				'method' 	  => NULL
 			]

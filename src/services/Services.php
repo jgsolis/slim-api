@@ -4,38 +4,27 @@ return [
 	
 	'logger' => function($c){
 
-		if ( !isset($c) )
-		{ 
-			throw new \Exception('No existe el contenedor de dependencias'); 
-		}
+		if ( !isset($c) ){ throw new \Exception('No se pudo obtener el contenedor de dependencias'); }
 
 		$classLogger   = '\\Katzgrau\\KLogger\\Logger';
 		$classLogLevel = '\\Psr\\Log\\LogLevel';
+		$config 	   = $c->get('settings');
 
-		if ( !class_exists($classLogger) ) 
-		{ 
-			throw new \Exception("La clase  {$classLogger}  no existe"); 
-		}
+		if ( !class_exists($classLogger) ) { throw new \Exception("La clase  {$classLogger}  no existe"); }
 
-		if ( !class_exists($classLogLevel) )
-		{ 
-			throw new \Exception("La clase {$classLogLevel} no existe"); 
-		}
+		if ( !class_exists($classLogLevel) ){ throw new \Exception("La clase {$classLogLevel} no existe"); }
 
-		if ( empty($c->get('settings')['logger']) )
-		{ 
-			throw new \Exception("No se encuentra la configuración del logger"); 
-		}
+		if ( !isset($config['logger']) ){ throw new \Exception("No se encuentra la configuración [logger] en el archivo [config.php]"); }
 
-		$extension  = ( $c->get('settings')['logger']['extension'] == NULL || trim($c->get('settings')['logger']['extension']) === '' )? 'log' : $c->get('settings')['logger']['extension'];
+		if ( !is_array($config['logger']) ){ throw new \Exception("El elemento [logger] de [config.php] debe ser un arreglo"); }
+		
+		$extension  = ( empty($config['logger']['extension']) )? 'log' : $config['logger']['extension'];
 
-		$path		= ( $c->get('settings')['logger']['path'] == NULL || trim($c->get('settings')['logger']['path']) === '' )? 'logs/' : $c->get('settings')['logger']['path'];
+		$path		= ( empty($config['logger']['path']) )? 'logs/': $config['logger']['path'];
 
-		$prefix 	= ( $c->get('settings')['logger']['prefix'] == NULL || trim($c->get('settings')['logger']['prefix']) === '' )? 'app_' : $c->get('settings')['logger']['prefix'];
+		$prefix 	= ( empty($config['logger']['prefix']) )? 'app_' : $config['logger']['prefix'];
 
-		$config     = $c->get('settings')['logger'];
-
-		$logger 	= new $classLogger( $path, $classLogLevel::ERROR, array (
+		$logger 	= new $classLogger( $path, $classLogLevel::INFO, array (
 		    'extension' => $extension,
 		    'prefix'	=> $prefix
 		));
@@ -48,10 +37,7 @@ return [
 
 		$class = '\\SlimApi\\Responses\\JSONResponse';
 
-		if ( !class_exists($class) )
-		{
-			throw new \Exception("La clase {$class} no existe");
-		}
+		if ( !class_exists($class) ){ throw new \Exception("La clase {$class} no existe"); }
 
 		$response = new $class();
 
@@ -61,27 +47,25 @@ return [
 
 	'debugLogger' => function($c){
 
-		if ( !isset($c) ){ throw new \Exception('No existe el contenedor de dependencias'); }
+		if ( !isset($c) ){ throw new \Exception('No se pudo obtener el contenedor de dependencias'); }
 
 		$classLogger   = '\\Katzgrau\\KLogger\\Logger';
 		$classLogLevel = '\\Psr\\Log\\LogLevel';
+		$config 	   = $c->get('settings');
 
 		if ( !class_exists($classLogger) ) { throw new \Exception("La clase  {$classLogger}  no existe"); }
 
 		if ( !class_exists($classLogLevel) ){ throw new \Exception("La clase {$classLogLevel} no existe"); }
 
-		if ( empty($c->get('settings')['debugLogger']) )
-		{ 
-			throw new \Exception("No se encuentra la configuración del debugLogger"); 
-		}
+		if ( !isset($config['debugLogger']) ){ throw new \Exception("No se encuentra la configuración [debugLogger] en el archivo [config.php]"); }
 
-		$extension  = ( $c->get('settings')['debugLogger']['extension'] == NULL || trim($c->get('settings')['debugLogger']['extension']) === '' )? 'log' : $c->get('settings')['debugLogger']['extension'];
+		if ( !is_array($config['debugLogger']) ){ throw new \Exception("El elemento [debugLogger] de [config.php] debe ser un arreglo"); }
+		
+		$extension  = ( empty($config['debugLogger']['extension']) )? 'log' : $config['debugLogger']['extension'];
 
-		$path		= ( $c->get('settings')['debugLogger']['path'] == NULL || trim($c->get('settings')['debugLogger']['path']) === '' )? 'logs/debug/': $c->get('settings')['debugLogger']['path'];
+		$path		= ( empty($config['debugLogger']['path']) )? 'logs/debug/': $config['debugLogger']['path'];
 
-		$prefix 	= ( $c->get('settings')['debugLogger']['prefix'] == NULL || trim($c->get('settings')['debugLogger']['prefix']) === '' )? 'debug_' : $c->get('settings')['debugLogger']['prefix'];
-
-		$config     = $c->get('settings')['debugLogger'];
+		$prefix 	= ( empty($config['debugLogger']['prefix']) )? 'debug_' : $config['debugLogger']['prefix'];
 
 		$logger 	= new $classLogger( $path, $classLogLevel::INFO, array (
 		    'extension' => $extension,
